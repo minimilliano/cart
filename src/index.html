@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="tailwind.css">
+	<style>
+		th, tbody, td{
+			border: 1px solid black;
+		}
+	</style>
+	<title>ShoppingCart</title>
+</head>
+<body>
+	<div>
+		<table>
+			<thead>
+				<th>ITEM ID</th>
+				<th>ITEM NAME</th>
+				<th>ITEM PRICE</th>
+				<th>ACTION</th>
+			</thead>
+			<tbody id="tableBody">
+			</tbody>
+		</table>
+	</div>
+
+	<script>
+		let arrayOfObjects = [
+	{ id: 1, product_name: "Cars", price: 10000 },
+	{ id: 2, product_name: "Bikes", price: 7000 },
+	{ id: 3, product_name: "Boats", price: 40000 },
+	{ id: 4, product_name: "Airplanes", price: 90000 },
+	{ id: 5, product_name: "Horses", price: 50000 },
+	{ id: 6, product_name: "Bicycle", price: 20000 }
+ ];
+
+let tableBody = document.getElementById("tableBody")
+
+ for (let i = 0; i < arrayOfObjects.length; i++) {
+let trElement = document.createElement("tr")
+tableBody.appendChild(trElement)
+trElement.innerHTML = `	<td id="item-${i}-id"></td>
+					<td id="item-${i}-product_name"></td>
+					<td id="item-${i}-price"></td>
+					<td><button>buy</button></td>
+				`
+	
+ }
+
+ for (let i = 0; i < arrayOfObjects.length; i++) {
+	document.getElementById(`item-${i}-id`).textContent = arrayOfObjects[i].id
+	document.getElementById(`item-${i}-product_name`).textContent = arrayOfObjects[i].product_name
+	document.getElementById(`item-${i}-price`).textContent = arrayOfObjects[i].price
+ }
+	</script>
+</body>
+</html>
