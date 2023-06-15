@@ -8,10 +8,18 @@
 		th, tbody, td{
 			border: 1px solid black;
 		}
+		input{
+			border: 1px solid gray;
+		}
 	</style>
 	<title>ShoppingCart</title>
 </head>
 <body>
+	<div>
+		<input type="text" name="newItemName" id="newItemName" placeholder="item name">
+		<input type="number" name="newItemPrice" id="newItemPrice" placeholder="item price">
+		<button class="bg-gray-400 px-2 py-1 rounded-sm text-sm " onclick="addEntry()">Add Entry</button>
+	</div>
 	<div>
 		<table>
 			<thead>
@@ -35,9 +43,13 @@
 	{ id: 6, product_name: "Bicycle", price: 20000 }
  ];
 
-let tableBody = document.getElementById("tableBody")
 
- for (let i = 0; i < arrayOfObjects.length; i++) {
+
+//generate html data
+function generateHtmlData(dataArr) {
+	document.getElementById("tableBody").innerHTML = ""
+	let tableBody = document.getElementById("tableBody")
+	for (let i = 0; i < dataArr.length; i++) {
 let trElement = document.createElement("tr")
 tableBody.appendChild(trElement)
 trElement.innerHTML = `	<td id="item-${i}-id"></td>
@@ -48,7 +60,8 @@ trElement.innerHTML = `	<td id="item-${i}-id"></td>
 				`
 	
  }
-
+}
+generateHtmlData(arrayOfObjects)
  
  function generateTableData(dataArr) {
 	for (let i = 0; i < dataArr.length; i++) {
@@ -70,6 +83,20 @@ generateTableData(arrayOfObjects)
 	generateTableData(arrayOfObjects)
 
  }
+
+ //function to add new entry to array
+ function addEntry() {
+	let newItemName = document.getElementById('newItemName').value
+	let newItemPrice = document.getElementById('newItemPrice').value
+	let newItem = {
+		id: arrayOfObjects.length + 1, product_name: newItemName, price: newItemPrice
+	}
+	arrayOfObjects.push(newItem)
+ 	generateHtmlData(arrayOfObjects)
+	generateTableData(arrayOfObjects)
+
+ }
+
 	</script>
 </body>
 </html>
