@@ -15,9 +15,9 @@
 	<div>
 		<table>
 			<thead>
-				<th>ITEM ID</th>
+				<th class="cursor-pointer" onclick="sortColumn('id')">ITEM ID</th>
 				<th>ITEM NAME</th>
-				<th>ITEM PRICE</th>
+				<th class="cursor-pointer" onclick="sortColumn('price')">ITEM PRICE</th>
 				<th>ACTION</th>
 			</thead>
 			<tbody id="tableBody">
@@ -43,15 +43,32 @@ tableBody.appendChild(trElement)
 trElement.innerHTML = `	<td id="item-${i}-id"></td>
 					<td id="item-${i}-product_name"></td>
 					<td id="item-${i}-price"></td>
-					<td><button>buy</button></td>
+					<td><button class="btn">buy</button>
+						<button class="btn">delete</button></td>
 				`
 	
  }
 
- for (let i = 0; i < arrayOfObjects.length; i++) {
-	document.getElementById(`item-${i}-id`).textContent = arrayOfObjects[i].id
-	document.getElementById(`item-${i}-product_name`).textContent = arrayOfObjects[i].product_name
-	document.getElementById(`item-${i}-price`).textContent = arrayOfObjects[i].price
+ 
+ function generateTableData(dataArr) {
+	for (let i = 0; i < dataArr.length; i++) {
+	document.getElementById(`item-${i}-id`).textContent = dataArr[i].id
+	document.getElementById(`item-${i}-product_name`).textContent = dataArr[i].product_name
+	document.getElementById(`item-${i}-price`).textContent = dataArr[i].price
+ }
+
+}
+//generate initial data
+generateTableData(arrayOfObjects)
+
+ function sortFunction(column) {
+	return arrayOfObjects.sort((obj1, obj2) => obj1[column] - obj2[column] )
+ }
+ function sortColumn(column) {
+    arrayOfObjects = sortFunction(column)
+	//generated sorted data
+	generateTableData(arrayOfObjects)
+
  }
 	</script>
 </body>
