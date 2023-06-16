@@ -1,102 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="tailwind.css">
-	<style>
-		th, tbody, td{
-			border: 1px solid black;
-		}
-		input{
-			border: 1px solid gray;
-		}
-	</style>
-	<title>ShoppingCart</title>
-</head>
-<body>
-	<div>
-		<input type="text" name="newItemName" id="newItemName" placeholder="item name">
-		<input type="number" name="newItemPrice" id="newItemPrice" placeholder="item price">
-		<button class="bg-gray-400 px-2 py-1 rounded-sm text-sm " onclick="addEntry()">Add Entry</button>
-	</div>
-	<div>
-		<table>
-			<thead>
-				<th class="cursor-pointer" onclick="sortColumn('id')">ITEM ID</th>
-				<th>ITEM NAME</th>
-				<th class="cursor-pointer" onclick="sortColumn('price')">ITEM PRICE</th>
-				<th>ACTION</th>
-			</thead>
-			<tbody id="tableBody">
-			</tbody>
-		</table>
-	</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="tailwind.css" />
+    <style>
+      th,
+      tbody,
+      td {
+        border: 1px solid black;
+      }
+      input {
+        border: 1px solid gray;
+      }
+    </style>
+    <title>ShoppingCart</title>
+  </head>
+  <body>
+    <div>
+      <input
+        type="text"
+        name="newItemName"
+        id="newItemName"
+        placeholder="item name"
+      />
+      <input
+        type="number"
+        name="newItemPrice"
+        id="newItemPrice"
+        placeholder="item price"
+      />
+      <button
+        class="bg-gray-400 px-2 py-1 rounded-sm text-sm"
+        onclick="addEntry()"
+      >
+        Add Entry
+      </button>
+    </div>
+    <div>
+      <table>
+        <thead>
+          <th class="cursor-pointer" onclick="sortColumn('id')">ITEM ID</th>
+          <th>ITEM NAME</th>
+          <th class="cursor-pointer" onclick="sortColumn('price')">
+            ITEM PRICE
+          </th>
+          <th>ACTION</th>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
 
-	<script>
-		let arrayOfObjects = [
-	{ id: 1, product_name: "Cars", price: 10000 },
-	{ id: 2, product_name: "Bikes", price: 7000 },
-	{ id: 3, product_name: "Boats", price: 40000 },
-	{ id: 4, product_name: "Airplanes", price: 90000 },
-	{ id: 5, product_name: "Horses", price: 50000 },
-	{ id: 6, product_name: "Bicycle", price: 20000 }
- ];
+    <script>
+      let arrayOfObjects = [
+        { id: 1, product_name: "Cars", price: 10000 },
+        { id: 2, product_name: "Bikes", price: 7000 },
+        { id: 3, product_name: "Boats", price: 40000 },
+        { id: 4, product_name: "Airplanes", price: 90000 },
+        { id: 5, product_name: "Horses", price: 50000 },
+        { id: 6, product_name: "Bicycle", price: 20000 },
+      ];
+      let storedData = getStoredData();
+      if (storedData) {
+        arrayOfObjects = storedData;
+      }
 
+      //generate html data
+      function generateHtmlData(dataArr) {
+        //clear existing tbody content to avoid building on existing data
+        document.getElementById("tableBody").innerHTML = "";
+        let tableBody = document.getElementById("tableBody");
+        for (let i = 0; i < dataArr.length; i++) {
+          let trElement = document.createElement("tr");
+          tableBody.appendChild(trElement);
+          trElement.innerHTML = `	<td id="item-${i}-id"></td>
+							<td id="item-${i}-product_name"></td>
+							<td id="item-${i}-price"></td>
+							<td><button>buy</button>
+								<button onclick="deleteItem(${i + 1})">delete</button></td>
+						`;
+        }
+      }
+      //generating htmldata for the items in the arrays
+      generateHtmlData(arrayOfObjects);
 
+      function generateTableData(dataArr) {
+        //targeting the ids created in the generateHtmlData() and assigning values from arrays
+        for (let i = 0; i < dataArr.length; i++) {
+          document.getElementById(`item-${i}-id`).textContent = dataArr[i].id;
+          document.getElementById(
+            `item-${i}-product_name`
+          ).innerHTML = `<b>${dataArr[i].product_name}</b>`;
+          document.getElementById(
+            `item-${i}-price`
+          ).innerHTML = `<p>$ ${dataArr[i].price}</p>`;
+        }
+      }
+      //generate initial data
+      generateTableData(arrayOfObjects);
 
-//generate html data
-function generateHtmlData(dataArr) {
-	document.getElementById("tableBody").innerHTML = ""
-	let tableBody = document.getElementById("tableBody")
-	for (let i = 0; i < dataArr.length; i++) {
-let trElement = document.createElement("tr")
-tableBody.appendChild(trElement)
-trElement.innerHTML = `	<td id="item-${i}-id"></td>
-					<td id="item-${i}-product_name"></td>
-					<td id="item-${i}-price"></td>
-					<td><button class="btn">buy</button>
-						<button class="btn">delete</button></td>
-				`
-	
- }
-}
-generateHtmlData(arrayOfObjects)
- 
- function generateTableData(dataArr) {
-	for (let i = 0; i < dataArr.length; i++) {
-	document.getElementById(`item-${i}-id`).textContent = dataArr[i].id
-	document.getElementById(`item-${i}-product_name`).textContent = dataArr[i].product_name
-	document.getElementById(`item-${i}-price`).textContent = dataArr[i].price
- }
+      function sortColumn(column) {
+        arrayOfObjects = arrayOfObjects.sort(
+          (obj1, obj2) => obj1[column] - obj2[column]
+        );
+        //generated sorted data
+        generateTableData(arrayOfObjects);
+      }
 
-}
-//generate initial data
-generateTableData(arrayOfObjects)
+      //function to add new entry to array
+      function addEntry() {
+        let newItemName = document.getElementById("newItemName").value;
+        let newItemPrice = document.getElementById("newItemPrice").value;
+        let newItem = {
+          id: arrayOfObjects.length + 1,
+          product_name: newItemName,
+          price: newItemPrice,
+        };
+        arrayOfObjects.push(newItem);
+        generateHtmlData(arrayOfObjects);
+        generateTableData(arrayOfObjects);
+        storeData(arrayOfObjects);
+      }
 
- function sortFunction(column) {
-	return arrayOfObjects.sort((obj1, obj2) => obj1[column] - obj2[column] )
- }
- function sortColumn(column) {
-    arrayOfObjects = sortFunction(column)
-	//generated sorted data
-	generateTableData(arrayOfObjects)
+      //persist data
+      function storeData(data) {
+        localStorage.removeItem("products");
+        localStorage.setItem("products", JSON.stringify(data));
+      }
+      function getStoredData() {
+        return JSON.parse(localStorage.getItem("products"));
+      }
 
- }
-
- //function to add new entry to array
- function addEntry() {
-	let newItemName = document.getElementById('newItemName').value
-	let newItemPrice = document.getElementById('newItemPrice').value
-	let newItem = {
-		id: arrayOfObjects.length + 1, product_name: newItemName, price: newItemPrice
-	}
-	arrayOfObjects.push(newItem)
- 	generateHtmlData(arrayOfObjects)
-	generateTableData(arrayOfObjects)
-
- }
-
-	</script>
-</body>
+      //action button for deleting item
+      function deleteItem(itemId) {
+        const newArrayOfObjects = arrayOfObjects.filter((item) => {
+          return item.id != itemId;
+        });
+        generateHtmlData(newArrayOfObjects);
+        generateTableData(newArrayOfObjects);
+        storeData(newArrayOfObjects);
+      }
+    </script>
+  </body>
 </html>
